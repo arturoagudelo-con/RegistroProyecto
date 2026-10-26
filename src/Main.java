@@ -1,4 +1,3 @@
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -22,5 +21,17 @@ public class Main {
                 ));
 
         System.out.println("cantidad de usuario por estacion: "+ContarEstacion);
+
+        Map<Integer, Long> horaPicoFlujo = registro.stream()
+                .collect(Collectors.groupingBy(
+                        usuario -> usuario.timestamp().getHour(),
+                        Collectors.counting()
+                ));
+        System.out.println("agrupacion resgistro por horas: "+ horaPicoFlujo);
+
+       Map.Entry<Integer, Long> maxFlujo = horaPicoFlujo.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+               .orElse(null);
+        System.out.println("El momento de mayor flujo es: "+ maxFlujo);
     }
 }
