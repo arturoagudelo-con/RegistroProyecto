@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -10,7 +9,7 @@ public class Main {
                 new RegistroUsuario("U2","ruta2","La Estrella", "Salida", LocalDateTime.of(2026, 10, 10,12,15)),
                 new RegistroUsuario("U3", "ruta3","Niquia", "Entrada", LocalDateTime.of(2026,10,10,13,45)),
                 new RegistroUsuario("U4","ruta1", "Poblado", "Salida", LocalDateTime.of(2026,10,10,14,54)),
-                new RegistroUsuario("U2","ruta2","La Estrella", "Salida",LocalDateTime.of(2026,10,10,16,32)),
+                new RegistroUsuario("U2","ruta3","Niquia", "Salida",LocalDateTime.of(2026,10,10,16,32)),
                 new RegistroUsuario("U1","ruta3", "Niquia", "Entrada",LocalDateTime.of(2026,10,10,8,40)),
                 new RegistroUsuario("U1","ruta3", "La estrella", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
                 new RegistroUsuario("U3","ruta4", "Sabaneta", "Entrada",LocalDateTime.of(2026,10,10,19,40))
@@ -48,6 +47,16 @@ public class Main {
                                        .forEach(entrada -> System.out.println("Ruta: "+ entrada.getKey() + " accesos: "+entrada.getValue()));
 
 
+       Map<String, Collection<String>> estacionesVisitadas = registro.stream()
+               .collect(Collectors.groupingBy(
+                       RegistroUsuario::idUsuario,
+                       Collectors.mapping(
+                               RegistroUsuario::estacion,
+                               Collectors.toCollection(LinkedHashSet::new))
+
+               ));
+                estacionesVisitadas.forEach((idUsuario, estacion) ->
+                        System.out.println(idUsuario + " Estacion visitada: "+ estacion));
     }
 
 
