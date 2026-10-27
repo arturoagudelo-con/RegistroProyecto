@@ -45,7 +45,7 @@ public class Main {
        rutaMayoracceso.entrySet().stream()
                        .filter(entradas ->entradas.getValue() > 1)
                                .sorted(Map.Entry.<String,Long>comparingByValue().reversed())
-                                       .forEach(entry -> System.out.println("Ruta: "+ entry.getKey() + " accesos: "+entry.getValue()));
+                                       .forEach(entrada -> System.out.println("Ruta: "+ entrada.getKey() + " accesos: "+entrada.getValue()));
 
 
     }
