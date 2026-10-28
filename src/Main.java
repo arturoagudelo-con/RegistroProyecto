@@ -14,8 +14,10 @@ public class Main {
                 new RegistroUsuario("U2","ruta3","Niquia", "Salida",LocalDateTime.of(2026,10,10,16,32)),
                 new RegistroUsuario("U1","ruta3", "Niquia", "Entrada",LocalDateTime.of(2026,10,10,8,40)),
                 new RegistroUsuario("U1","ruta3", "La estrella", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
-                new RegistroUsuario("U3","ruta4", "Sabaneta", "Entrada",LocalDateTime.of(2026,10,10,19,40))
+                new RegistroUsuario("U3","ruta4", "Sabaneta", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
+                new RegistroUsuario("U4","ruta1", "Poblado", "Salida", LocalDateTime.of(2026,10,10,18,54))
                 );
+
 
         Map<String,Long> ContarEstacion = registro.stream()
                 .collect(Collectors.groupingBy(
@@ -68,7 +70,29 @@ public class Main {
                ))
                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.averagingLong(AbstractMap.SimpleEntry::getValue)));
        tiempoRecorrido.forEach((distancia, tiempo) -> System.out.println(distancia + " toma: "+ tiempo + " en minutos"));
+
+
+       Map<String, Long> superarUmbral = registro.stream()
+               .collect(Collectors.groupingBy(
+                       RegistroUsuario::ruta,
+                       Collectors.counting()
+               ));
+       List<String> rutaCritica = superarUmbral.entrySet().stream()
+               .map(e ->{
+                   String ruta = e.getKey();
+                   Long ocupacion = e.getValue();
+
+                   String umbral = (ocupacion > 2) ? "CRITICA" : "NORMAL";
+
+                   return String.format("Ruta: %s | Ocupacion: %d | Estado: %s", ruta, ocupacion,umbral);
+               })
+
+               .toList();
+       rutaCritica.forEach(System.out::println);
+
     }
+
+
 
 
 
