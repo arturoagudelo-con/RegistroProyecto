@@ -1,3 +1,9 @@
+// en nuestro main que es la clase principal tenemos las siguientes librerias LocalDateTime, para fecha, ChronoUnit para conteo de minutos,
+// Collectors para poder agrupar nuestros datos, IntStream para datos tipos int, luego tenemos una lista de la clase RegistroUsuario la cual se le asigna
+// un alias de resgitro para poder llamar sus metodos, luego con una List.of se agrega informacion simulada para poder hacer los analisis cada uno
+// con su new para una nueva linea donde tenemos en el idUsuario, ruta, estacion, accion, timestamp para poder llenar nuestros datos como es debido.
+
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -13,20 +19,27 @@ public class Main {
                 new RegistroUsuario("U4","ruta1", "Poblado", "Salida", LocalDateTime.of(2026,10,10,14,54)),
                 new RegistroUsuario("U2","ruta3","Niquia", "Salida",LocalDateTime.of(2026,10,10,16,32)),
                 new RegistroUsuario("U1","ruta3", "Niquia", "Entrada",LocalDateTime.of(2026,10,10,8,40)),
-                new RegistroUsuario("U1","ruta3", "La estrella", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
+                new RegistroUsuario("U1","ruta3", "La Estrella", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
                 new RegistroUsuario("U3","ruta4", "Sabaneta", "Entrada",LocalDateTime.of(2026,10,10,19,40)),
                 new RegistroUsuario("U4","ruta1", "Poblado", "Salida", LocalDateTime.of(2026,10,10,18,54))
                 );
-
-
+// en esta linea se nos pide cuantos usuarios entran por dias a casa estacion donde hacemos un Map donde debemos tener un dato tipo String para la salida del nombre de las estaciones
+// el tipo Long nos sirve para el conteo de personas por estacion, lo ponemos en una variable donde le asignamos el resgistro.stream() para poder llamar
+// las interfaces funcionales con operaciones intermedias y terminales para poder hacer los procesos, con el .filter hacemos una condicion donde el atributo accion
+// solo debe tener en cuenta el dato Entrada, con el .collect es una operacion para hacer una lista, un conjunto o mapa, luego llamamos al Collectors.groupingBy
+// para agrupar los valores clave, valor. luego le decimos que los agrupe por el atributo estacion de la clase RegistroUsuario, y por ultimo hacemos el conteo por entrada con RegistroUsuario
         Map<String,Long> ContarEstacion = registro.stream()
+                .filter(s -> s.accion().equals("Entrada"))
                 .collect(Collectors.groupingBy(
                         RegistroUsuario::estacion,
                         Collectors.counting()
                 ));
 
         System.out.println("cantidad de usuario por estacion: "+ContarEstacion);
-
+// en esta linea se nos pide que agrupemos por hora en las estaciones, por lo cual usamos un Map para poder hacer una collecion
+// este nos quiere indicar que va devolver una llave y un valor donde la llave es igual a la hora y el valor de la cantidad de esa hora
+// se agrupa por el dato timestamp que es la fecha completa y luego se llama con getHour a la hora para poder hacer el proceso
+// luego se hace el conteo por hora y es asi como arroja dichos resultados.
         Map<Integer, Long> horaPicoFlujo = registro.stream()
                 .collect(Collectors.groupingBy(
                         usuario -> usuario.timestamp().getHour(),
