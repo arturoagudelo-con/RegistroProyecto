@@ -1,6 +1,8 @@
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -57,6 +59,15 @@ public class Main {
                ));
                 estacionesVisitadas.forEach((idUsuario, estacion) ->
                         System.out.println(idUsuario + " Estacion visitada: "+ estacion));
+
+       var tiempoRecorrido = IntStream.range(0, registro.size()-1)
+               .filter(i -> registro.get(i).idUsuario().equals(registro.get(i + 1).idUsuario()))
+               .mapToObj(i -> new AbstractMap.SimpleEntry<>(
+                       registro.get(i).estacion() + " -> " + registro.get(i + 1).estacion(),
+                       ChronoUnit.MINUTES.between(registro.get(i).timestamp(), registro.get(i + 1).timestamp())
+               ))
+               .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.averagingLong(AbstractMap.SimpleEntry::getValue)));
+       tiempoRecorrido.forEach((distancia, tiempo) -> System.out.println(distancia + " toma: "+ tiempo + " en minutos"));
     }
 
 
